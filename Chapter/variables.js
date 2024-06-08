@@ -1,7 +1,7 @@
 // 2024.06.08
 
-console.log(v);
-console.lofg(x);
+console.log(v);   // undefined
+console.log(x);  // ReferenceError: Cannot access 'x' before initialization
 
 var v = 10;
 let x = '가';
