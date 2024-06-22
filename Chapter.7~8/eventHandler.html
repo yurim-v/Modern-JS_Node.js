@@ -1,0 +1,31 @@
+<!-- 2024.06.22 -->
+ <!DOCTYPE html>
+ <html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>event Handler</title>
+  </head>
+  <body>
+    <input type="button" id="eventBt" value="클릭 클릭">
+
+    <script>
+
+        // 객체형 이벤트 핸들러
+
+      let bt = document.getElementById('eventBt');
+
+      let clickHandler = {
+        handleEvent(event){
+          console.log(event.type);
+          console.log(event.target);
+        }
+      }
+
+      bt.addEventListener('click', clickHandler)
+    
+    </script>
+  </body>
+ </html>
