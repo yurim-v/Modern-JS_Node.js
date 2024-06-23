@@ -1,0 +1,95 @@
+<!-- 2024.06.22 / 06.23 -->
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <title>Class vs 생성자 </title>
+ </head>
+ <body>
+   <script>
+
+    // 객체를 정의하는 세 가지 방법
+
+    // 방법 1 : 생성자 함수
+
+    function Singer(name, group){
+      // 속성 정의
+      this.name = name;
+      this.group = group;
+
+      // 메소드 정의
+      this.song = function(song){
+        console.log(song);
+      }
+    }
+    // 객체 정의
+    let karina = new Singer('카리나', 'aepsa');
+
+    // 객체 활용
+    console.log(karina.name);
+    karina.song('Black Mamba');
+    
+
+    //------------------------------
+
+    // 방법 2 : 객체 리터럴 방식
+
+    let winter = {
+      name : '윈터',
+      group : '에스파',
+      song : function(song){
+        console.log(song);
+      }
+    }
+    
+    console.log(winter.group);
+    winter.song('Amagetdon');
+    
+
+    //------------------------------
+
+    // 방법 3 : Class
+
+    class Ning{
+      // 속성 정의
+      constructor(name,group){
+        this.name = name;
+        this.group = group;
+      }
+      
+      // 메소드 정의 
+      song(song){
+        console.log(song);
+      }
+    }
+
+    let ning = new Ning('닝닝','ae스파');
+
+    console.log(ning.name);
+    ning.song('Super Nova');
+
+  
+    //------------------------------
+
+    // 방법 4 : 빌트인 생성자 Object()
+
+    let giselle = new Object();
+
+    giselle.name = '지젤';
+    giselle.group = '에스파';
+
+    giselle.song = function(song){
+      console.log(song);
+    }
+
+    console.log(giselle);
+    
+    console.log(giselle.name);
+    giselle.song('Spicy');
+    
+   </script>
+ </body>
+</html>
