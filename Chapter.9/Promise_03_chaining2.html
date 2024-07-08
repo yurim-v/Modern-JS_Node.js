@@ -1,0 +1,63 @@
+<!-- 2024.07.08 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise 응용 3 : 프로미스 체이닝 2</title>
+
+  <style>
+
+  </style>
+</head>
+<body>
+
+  <script>
+    function getData(){
+      const promise = new Promise((resolve, reject) => {
+        setTimeout( ()=>{
+          // const data = null;
+          const data = {name : '김애숙'}
+          
+          if(data){
+            console.log('네트워크 요청 성공');    
+            resolve(data); 
+          }else{
+            reject(new Error('네트워크 문제 !!'));
+          }  
+        }, 1000)
+      });
+
+      return promise;
+    }
+
+    //---------------------------------------------
+
+    const promise = getData();
+
+    promise
+      .then(data=>{
+        console.log(data);
+
+        // 반환 값이 promise가 아니라면?
+        return "Hello"
+        /*
+          then()은 언제나 promise를 반환
+          -> 반환 값이 promise인 경우 그대로 반환
+
+          -> 반환 값이 promise가 아니면?
+           -> 반환 값을 새로운 promise의 result 값으로 넣음
+           -> 새로 형성된 promise는 내부적으로 작업 성공이 되었다고 간주
+           -> resolve된 promise의 결과 데이터가 Hello가 되는 것
+
+           -> 간단히 말해서, 내부적으로 작업이 성공한(resolve된) promise의 결과 데이터로 간주
+           -> 반환 값이 promise에 감싸져서 반환된다.
+        */
+      }).then(data =>{console.log(data);})
+
+
+
+  </script>
+</body>
+</html>
