@@ -1,0 +1,49 @@
+<!-- 2024.07.08 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise 기본 개념</title>
+
+  <style>
+
+  </style>
+</head>
+<body>
+
+  <script>
+    
+    const promise = new Promise((resolve, reject) => {
+      // 서버에서 데이터를 받아오는 비동기 작업을 흉내내는 코드를 예시로 구현
+      setTimeout( ()=>{
+        const data = null;
+        // const data = {name : '김애숙'}
+        
+
+        // 프로미스에게 비동기 작업이 완료됐음을 알려줘야한다.
+        if(data){
+          console.log('네트워크 요청 성공');
+
+          // resolve : 비동기 작업이 성공했음을 프로미스에게 알려줌
+          resolve(data); // 인자로는 비동기 작업의 결과물을 넣어준다.
+        }else{
+
+          // reject : 비동기 작업이 실패했음을 프로미스에게 알려줌
+          reject(new Error('네트워크 문제 !!'))
+        }
+        
+      }, 1000)
+    }); // 익스큐터 함수는 프로미스 객체가 생성됨과 동시에 함수 실행
+
+    console.log(promise);  
+    /* 대기상태 출력 : 프로미스에게 비동기 작업이 끝났다고 알려주지 않았기 때문
+      > 프로미스에게 비동기 작업이 완료됐음을 resolve 함수를 통해서 알려준다. */
+      
+    setTimeout(()=>{
+      console.log(promise); // state : Fullfield > 작업 성공 반영
+    }, 2000)
+  </script>
+</body>
+</html>
