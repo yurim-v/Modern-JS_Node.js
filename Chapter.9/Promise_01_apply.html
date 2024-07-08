@@ -1,0 +1,80 @@
+<!-- 2024.07.08 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise 응용 1 : 비동기 작업 구현 및 활용 </title>
+
+  <style>
+
+  </style>
+</head>
+<body>
+
+  <script>
+    /*
+     특정 함수가 실행될 때, 비동기 작업을 실행하고 싶다.
+     -> 비동기 함수를 구현(정의)
+     -> 비동기 함수가 실행될 때, 프로미스 객체를 생성하면 된다.
+    */
+
+    function getData(){
+      const promise = new Promise((resolve, reject) => {
+        setTimeout( ()=>{
+          const data = null;
+          // const data = {name : '김애숙'}
+          
+          if(data){
+            console.log('네트워크 요청 성공');    
+            resolve(data); 
+          }else{
+            reject(new Error('네트워크 문제 !!'));
+          }  
+        }, 1000)
+      });
+
+      return promise;
+      // 프로미스 반환 : 특정함수 (getData) 호출했을 때, 비동기 작업의 진행을 알아야하기 때문
+
+    }
+
+
+    //------------------------------------------------------------------------
+
+    /* 비동기 함수 활용(사용) 
+      -> 비동기 함수가 완료될 때까지 기다려야한다.
+
+      -> 작업이 성공했을 때, 결과를 처리할 수 있어야함
+      -> 실패했을 경우, 에러를 처리할 수 있어야함
+
+      -> 프로미스 객체가 제공하는 API를 통해 처리할 수 있다.
+      -> then(), catch(), finally()
+    */
+
+    // 비동기 작업이 성공했을 때, 후처리 작업 구현 -> then()
+    getData().then((data)=>{
+      console.log(data);
+    });
+    /* 이 코드를 같음
+      let promise = getData();
+
+      promise.then((data)=>{
+        console.log(data);
+      })
+    */
+
+
+    // 비동기 작업이 실패했을 때, 후처리 작업 구현 -> catch();
+    getData().catch((error)=>{
+      console.log(error);
+    })
+
+    // 비동기 작업의 결과와 무관하게 실행될 코드
+    getData().finally(()=>{
+      console.log('마무리작업');
+    })
+  </script>
+</body>
+</html>
