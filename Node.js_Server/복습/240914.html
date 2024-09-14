@@ -1,0 +1,51 @@
+
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatable" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> 복습 </title>
+    <style>
+
+    </style>
+  </head>
+  <body>
+
+
+    <script>
+      // api 호출하는 방법 1 : XMLHttpRequest
+
+      let request = new XMLHttpRequest();
+
+      request.open('get','https://dog.ceo/api/breeds/list/all',true);
+
+      request.addEventListener('load',(evnet)=>{
+        console.log('응답 상태 : '+ request.status);
+        console.log('응답 : ' + request.response);
+      })
+
+      request.send();
+
+      //----------------------------------------------------------------------
+
+      // 방법 2 : fetch
+
+      fetch('https://dog.ceo/api/breeds/list/all')
+        .then(response=>response.json())
+        .then(data=>{
+          console.log(data)
+        })
+        .catch(error=>{
+          console.log('에러발생!!');
+        })
+        .finally(()=>{
+          console.log('마무리 작업~')
+        })
+
+
+    </script>
+  </body>
+</html>
