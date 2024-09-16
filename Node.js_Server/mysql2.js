@@ -1,71 +1,63 @@
 
+// MySQL 연동 코드
+let mysql = require('mysql2');
+
+// MySQL 접속 및 연동을 위한 설정
+let conn = mysql.createConnection({
+  host:'localhost',
+  user : 'root',
+  password : '0000',
+  database : 'myboard'
+})
+
+// MySLQ 연결
+conn.connect();
+
+
+//-------------------------------
+
 /*
+conn.query('select * from todolist',(err,rows,fields)=>{
+  if(err) throw err;
 
-// promise 이용해서 코드 작성
-
-  let mysql = require('mysql2/promise');
-
-  async function getData(){
-    try{
-      let connection = await mysql.createConnection({
-        host : 'localhost',
-        user : 'root',
-        password : '0000',
-        database : 'myboard'
-      })
-
-      await connection.query('select * from todolist')
-        .then(([rows,field])=>{
-          console.log(rows);
-        })
-        .catch((error)=>{
-          console.log('에러 처리 완료');
-        })
-        .finally(()=>{
-          if(connection){
-            console.log('연결 종료');
-            connection.end();
-          }
-        })    
-    }catch(err){
-      console.log(err);
-    }
-  }
-
-  getData();
-
+  console.log(rows);
+  console.log(fields);
+})
 */
 
 
+//----------------------------------
 
-// 동기화 시켜서 코드 작성
+let express = require('express');
+let app = express();
 
-let mysql = require('mysql2/promise');
+app.listen(3000,()=>{
+  console.log('서버 접속 중...');
+})
 
-async function getData(){
-  let connection;
-  try{
-     connection = await mysql.createConnection({
-      host : 'localhost',
-      user : 'root',
-      password : '0000',
-      database : 'myboard'
-    })
 
-    let [rows,fields] = await connection.query('select * from todolist');
+app.get('/',(req,res)=>{
+  res.set('Content-Type','text/plain; charset=uft8');
+  res.send('홈화면입니다.')
+})
+
+//----------------------------------
+
+
+/*
+ 서버가 연결됨과 동시에 데이터를 조회하는 것이 아닌,
+  데이터 조회 요청이 있을 때 데이터를 조회하겠다.
+*/
+
+app.get('/list',(req,res)=>{
+  console.log('데이터베이스를 조회합니다.')
+  res.send('데이터 조회중 ')
+
+  conn.query('select * from todolist',(err,rows,fields)=>{
+    if(err) throw err;
+  
     console.log(rows);
+    console.log(fields);
+  })
 
-   
-  }catch(err){
-    console.log(err);
-    
-  }finally{
-    if(connection){
-      console.log('마무리 작업');
-      connection.end();
-    }
-  }
-}
-
-getData();
-
+})
