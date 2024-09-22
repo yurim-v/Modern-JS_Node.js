@@ -56,7 +56,7 @@
               <td><%= data[i].content %> </td>
               <td><%= data[i].date %> </td>
               <td>
-                <button>삭제</button>
+                <button class="delete" data-id="<%= data[i]._id %>">삭제</button>
               </td>
             </tr>
           <%  } %>
@@ -71,7 +71,43 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+
+    <!-- jQuery를 사용하기 위한 웹 주소를 입력한다.  -->
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script>
+
+      $('.delete').click(function(e){
+
+        let sid = e.target.dataset.id
+
+        console.log(sid);
+
+        // jQuey 메소드를 사용하기 위해 jQuery 객체로 변환
+        let item = $(this);
+
+        console.log(item);
+        
+        // ajax 사용
+        $.ajax({
+          type : 'post',  // 요청 방식
+          url : '/delete',  // 요청 주소 -> list.ejs를 렌더하는 서버의 /delete 섹션으로 자동으로 요청을 전달한다.
+          data : {_id : sid }, // 서버에 전달할 요청 데이터
+        }).done((result)=>{
+          console.log('ajax 완료');
+
+          // jQuery 메소드 적용  
+          item.parent('td').parent('tr').remove();
+    
+    
+        }).fail((xhr,textStatus,errorThrown)=>{
+          console.log('삭제 실패')
+
+          console.log(xhr,textStatus,errorThrown);
+        })
+      })
 
     </script>
+
   </body>  
 </html>
