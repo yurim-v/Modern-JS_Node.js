@@ -2,6 +2,10 @@ const mysql = require('mysql2/promise');
 
 
 const mongoClient =require('mongodb').MongoClient;
+
+// objID 객체 선언
+const ObjId = require('mongodb').ObjectId;
+
 const url = 'mongodb+srv://yurim-v:yurim-v@yurim-v.6vzoh.mongodb.net/?retryWrites=true&w=majority&appName=yurim-v';
 
 const express = require('express');
@@ -52,7 +56,7 @@ app.get("/list",(req,res)=>{
   mydb.collection('post').find().toArray()
     .then((result)=>{
       console.log('데이터 조회 완료');
-      console.log(result);
+      // console.log(result);
 
       res.render('list.ejs',{data : result});
 
@@ -60,10 +64,30 @@ app.get("/list",(req,res)=>{
     .catch((err)=>{
       console.error(err);
     })
-
-
-
 })
+
+
+app.post('/delete',(req,res)=>{
+
+  // ajax가 전달한 data는 서버에 요청 데이터로 전송된다.
+  console.log(req.body);
+
+  // 문자열 형태인 id를 몽고DB 아이디 형식인 Object ID 형식으로 변환한다.
+  req.body._id = new ObjId(req.body._id);
+
+
+  mydb.collection('post').deleteOne(req.body)
+    .then((result)=>{
+      console.log('삭제완료');
+
+      // 데이터 삭제 후 응답으로 상태코드 200을 전송한다.
+      res.status(200).send()
+    })
+    .catch((err)=>{
+      res.status(500).send();
+    })
+})
+
 
 //---------------------------------------------
 
