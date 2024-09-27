@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title > review 1 </title>
+
+  </head>
+  <body>
+
+    <h1> sql </h1>
+    <% for(let i=0 ; i < sqlData.length ; i++){  %>
+      <div> 
+        <h3> <%= sqlData[i].title %> </h3>
+        <span> <%= sqlData[i].content %> </span>
+  
+        <button data-sid="<%= sqlData[i].id %>">삭제</button>
+      </div>
+
+    <%  }  %>
+
+    <hr/>
+    <h1> mongo </h1>
+    <% for(let i=0 ; i < mongoData.length ; i++){  %>
+      <div>
+        <h3> <%= mongoData[i].title %> </h3>
+        <span> <%= mongoData[i].content %> </span>
+        <button data-mid="<%= mongoData[i]._id %>">삭제</button>
+      </div>
+
+    <%  }  %>
+
+    </form>
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    
+    <script>
+      $('button').click(event=>{
+        
+        $.ajax({
+          type:'post',
+          url : '/delete',
+          data : {
+            id : event.target.dataset.sid,
+            _id : event.target.dataset.mid
+          }
+        }).done(result=>{
+          event.target.parentElement.remove();
+        }).fail(err=>{
+          console.error(err);
+          
+        })
+      
+
+      })
+
+
+    </script>
+
+  </body>
+</html>
