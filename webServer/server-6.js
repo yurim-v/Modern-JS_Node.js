@@ -83,7 +83,7 @@ app.post('/delete',(req,res)=>{
 })
 
 
-// 시맨틱 url 활용
+// 시맨틱 url 활용 
 app.get('/content/:id',(req,res)=>{
 
   console.log( req.params.id);
