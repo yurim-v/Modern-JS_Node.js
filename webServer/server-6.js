@@ -21,6 +21,8 @@ app.use(bodyParser.urlencoded({extended : true}));
 
 app.set('view engine',"ejs");
 
+app.use(express.static('public'));
+
 //---------------------------------------------
 
 app.get('/',(req,res)=>{
@@ -46,7 +48,9 @@ app.post('/save',(req,res)=>{
     {title : req.body.title, content : req.body.content, date : req.body.date}
   ).then((result)=>{
     console.log('몽고 DB 데이터 추가 완료');
-    console.log(result);
+    
+    // 요청 처리 후 페이지 이동
+    res.redirect('/list');
   })
 })
 
@@ -87,15 +91,52 @@ app.post('/delete',(req,res)=>{
 app.get('/content/:id',(req,res)=>{
 
   console.log( req.params.id);
+  console.log(req.params);
 
   req.params.id = new ObjId(req.params.id);
 
-  console.log(req.params);
-
-
-  res.render('content.ejs');
+  mydb.collection('post')
+   .findOne({_id : req.params.id})
+   .then((result)=>{
+    res.render('content.ejs',{data : result });
+   })
 })
 
+
+app.get('/edit/:id',(req,res)=>{
+
+  req.params.id = new ObjId(req.params.id);
+
+  mydb.collection('post')
+  .findOne({_id : req.params.id})
+  .then((result)=>{
+   res.render('edit.ejs',{data : result });
+  })
+})
+
+app.post('/update/:id',(req,res)=>{
+
+  req.params.id = new ObjId(req.params.id);
+
+  mydb.collection('post')
+   .updateOne(
+    {_id : req.params.id},
+    {
+      $set : {
+        title : req.body.title,
+        content : req.body.content,
+        date : req.body.date
+      }
+    }
+   )
+   .then(result=>{
+    console.log('데이터 수정 완료');
+
+    // 요청 처리 후 페이지 이동
+    res.redirect('/list');
+   })
+
+})
 
 //---------------------------------------------
 
