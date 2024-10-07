@@ -27,16 +27,6 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser('kadladksaw12491jkfda'));
 
 app.get('/cookie',(req,res)=>{
-  res.cookie('one', 3000, { signed : true});
-  res.cookie('two', 4000 );
-
-  console.log(req.cookies.one);
-  console.log(typeof(req.cookies.two));
-
-
-  res.send('쿠키 생성 중')
-
-  /*
   let milk = parseInt(req.signedCookies.milk) + 1000;
 
   if(isNaN(milk)){
@@ -45,7 +35,7 @@ app.get('/cookie',(req,res)=>{
 
   res.cookie('milk', milk, {signed : true } );
   res.send('prduct : ' + milk + '원');
-  */
+
 })
 
 
