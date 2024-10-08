@@ -1,0 +1,64 @@
+<!--2024.09.16-->
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="uft-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title> 회원가입 </title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+
+    </style>
+  </head>
+  <body>
+
+    <!--템플릿 엔진 : include -> 중복된 코드 분리 후 ejs에 적용  -->
+    <%- include('nav.html') %>
+
+    
+    <div id="container" class="ms-3 mt-3" >
+      <form action="/join" method="post">
+        <section>
+          <label>
+            아이디 
+            <input name='userid' class="form-control" style="width:500px;" autocomplete="off">
+          </label>
+        </section>
+      
+        <section style="margin-top:30px; margin-bottom:30px;" class="mb-3">
+          <label style="display:block;">
+            비밀번호
+            <input name="userpw" type="password" class="form-control" style="width:500px;" autocomplete="off">
+          </label>
+        </section>
+
+        <section style="margin-top:30px; margin-bottom:30px;" class="mb-3">
+          <label style="display:block;">
+            소속
+            <input name="usergroup" class="form-control" style="width:500px;" autocomplete="off">
+          </label>
+        </section>
+
+        <section style="margin-top:30px; margin-bottom:30px;" class="mb-3">
+          <label style="display:block;">
+            이메일
+            <input name="useremail" class="form-control" style="width:500px;"autocomplete="off">
+          </label>
+        </section>
+
+        <input type="submit" value="저장" class="btn btn-warning" >
+      </form>
+
+    </div> 
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+
+    </script>
+  </body>
+</html>
