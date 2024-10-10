@@ -79,8 +79,8 @@ app.get('/cookie',(req,res)=>{
 app.get('/',(req,res)=>{
   res.status(200);
   res.set('Content-type','text/html; charset=utf8');
-
   res.render('home.ejs');
+  console.log('홈 화면 접속');
 })
 
 app.get('/enter',(req,res)=>{
@@ -193,12 +193,13 @@ app.get('/login',(req,res)=>{
   console.log('로그인 페이지 접속');
 
   console.log(req.session);
-  console.log(req.session.user);
+  console.log(req.session.passport);
 
-  if(req.session.user){
+  if(req.session.passport){
     console.log('세션 유지')
     console.log('로그인 성공');
-    res.render('index.ejs',{user : req.session.user});
+    console.log(req.session.passport)
+    res.render('index.ejs',{user : req.session.passport});
   }else{
     res.render('login.ejs');
   }
@@ -206,6 +207,7 @@ app.get('/login',(req,res)=>{
 
 //---------------------------------------------
 
+// serializeUser : 인증 성공 후 passport session 생성
 passport.serializeUser((user,done)=>{
   console.log('serializeUser');
   console.log(user);
@@ -214,18 +216,35 @@ passport.serializeUser((user,done)=>{
   done(null, user.userid);
 })
 
+// deserializeUser : passport 세션 생성 후 세션 확인 및 유지
+passport.deserializeUser((puserid, done)=>{
+  console.log('deserializeUser');
+  console.log(puserid);
+
+  mydb
+    .collection('account')
+    .findOne({ userid : puserid })
+    .then(result =>{
+      console.log( result);
+      done(null, result);
+    })
+})
+
+
 // 로그인 기능 구현
+// passport.authenticate : passport 인증 실행 명령
 app.post('/login', passport.authenticate('local', {
     failureRedirect : '/'}
   ) ,
   (req,res)=>{
     console.log(req.session);
     console.log(req.session.passport);
-
+    console.log('로그인 완료');
     res.render('index.ejs',{ user : req.session.passport});
   }
 )
 
+// passport.use : 사용자 인증 실행
 passport.use(
   new LocalStrategy(
     {
