@@ -14,11 +14,39 @@
   <body>
     <%- include('review-nav.html') %>
 
-
+    <% if(user){ %>
+      <h1> <%= user.user %> 님 환영합니다.</h1>
+      <br/>
+      <button  id='btn-out' class="btn btn-success ms-1" > 로그아웃 </button>
+    <% }else{ %>
+      <h1> 로그인해주세요. </h1>
+      <br/>
+      <button id='btn-join' class="btn btn-success ms-1" > 회원가입 </button>
+      <button id='btn-in' class="btn btn-success ms-1" > 로그인 </button>
+    <%  }  %>
+  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script>
+      $('#btn-out').click(()=>{
+        $.ajax({
+          type : 'post',
+          url : '/logout',
+        }).done(result=>{
+        console.log('ajax 성공');
+        location.href='/';
+      })
+
+      })
+      $('#btn-join').click(()=>{
+        location.href='/join' ;
+      })
+
+      $('#btn-in').click(()=>{
+        location.href='/login' ;
+      })
+
 
     </script>
   </body>
