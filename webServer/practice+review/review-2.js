@@ -24,6 +24,22 @@ app.use(express.static('public'));
 
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+
+const sha = require('sha256');
+
+const session = require('express-session');
+app.use(session({
+  secret : 'dnaklfjidflasd',
+  resave : false,
+  saveUninitialized : true
+}))
+
+// passport
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+app.use(passport.initialize());
+app.use(passport.session());
 //------------------------------
 
 // 3. 서버 및 DB 연결 함수
@@ -58,7 +74,9 @@ async function connectDB(){
 // 4. 라우터 설계
 
 app.get('/',(req,res)=>{
-  res.render('review-home.ejs')
+  console.log('홈 화면 접속');
+  console.log(req.session.passport);
+  res.render('review-home.ejs',{ user : req.session.passport });
 })
 
 // a. DB 데이터 추가
@@ -175,7 +193,7 @@ app.get('/join',(req,res)=>{
 app.post('/join',(req,res)=>{
 
   let account_query = 'insert into account(userid, userpassword, email) values(?,?,?)'
-  let account_params = [req.body.userID, req.body.userPass, req.body.userEmail];
+  let account_params = [req.body.userID, sha(req.body.userPass), req.body.userEmail];
   sqlDB.query( account_query, account_params)
    .then(result=>{
     console.log(' account 추가 완료');
@@ -187,37 +205,107 @@ app.post('/join',(req,res)=>{
 
 // g. 로그인 구현
 app.get('/login',(req,res)=>{
-  if(req.cookies.userid){
-    console.log('로그인 성공');
-    res.send('로그인되었습니다.')
+  if(req.session.passport){
+    console.log(req.session.passport);
+    console.log('세션 확인 / 로그인 성공');
+    res.render('review-home.ejs',{ user : req.session.passport });
   }else{
+    console.log('로그인 페이지 접속')
     res.render('review-login.ejs');
   }
 
 })
 
-app.post('/login',(req,res)=>{
-  let logId = req.body.userID;
-  let logPass = req.body.userPass;
-  
-  sqlDB.query(`select * from account where userid='${logId}'` )
-   .then(([rows,fields])=>{
-    console.log(rows);
-    if(rows.length === 0){
-      console.log('아이디 불일치');
-      res.send('아이디가 존재하지 않습니다.');
-    }else if(rows[0].userpassword === logPass){
-      console.log('로그인 성공');
-      res.cookie("userid" , logId);
-      console.log('쿠키생성');
-      res.send('로그인되었습니다.')
-    }else{
+/*
+  app.post('/login',(req,res)=>{
+    let logId = req.body.userID;
+    let logPass = req.body.userPass;
+    
+    sqlDB.query(`select * from account where userid='${logId}'` )
+    .then(([rows,fields])=>{
       console.log(rows);
-      console.log('비밀번호 불일치');
-      res.send('비밀번호가 일치하지 않습니다.');
-    }
-   })
+      if(rows.length === 0){
+        console.log('아이디 불일치');
+        res.send('아이디가 존재하지 않습니다.');
+      }else if(rows[0].userpassword === sha(logPass)){
+        console.log('로그인 성공');
+        // res.cookie("userid" , logId);
+        // console.log('쿠키생성');
+
+        req.session.user = req.body;
+
+        res.redirect('/');
+      }else{
+        console.log(rows);
+        console.log('비밀번호 불일치');
+        res.send('비밀번호가 일치하지 않습니다.');
+      }
+    })
+  })
+*/
+
+// passport 적용
+app.post('/login',passport.authenticate('local',{
+  failureRedirect : '/'
+}),
+(req,res)=>{
+  res.render('review-home.ejs',{ user : req.session.passport });
 })
+
+passport.use(
+  new LocalStrategy({
+    usernameField : 'userID',
+    passwordField : 'userPass',
+    session : true,
+    passReqToCallback : false
+  }
+ ,(inputid, inputpw, done)=>{
+  sqlDB.query(`select * from account where userid='${inputid}'`)
+   .then(([rows,field])=>{
+      console.log(rows);
+      if(rows.length == 0){
+        console.log('아이디가 존재하지 않습니다.');
+        done(null, false, {messege : '아이디 존재하지 않음'});
+      }else if(sha(inputpw) == rows[0].userpassword){
+        console.log('로그인 성공');
+        done(null, rows[0]);
+      }else{
+        console.log('비밀번호 불일치');
+        done(null, false, {messege : '비밀번호 불일치'});
+      }
+    })
+}))
+
+passport.serializeUser((user, done)=>{
+  done(null,user.userid);
+})
+
+passport.deserializeUser((puserid,done)=>{
+  sqlDB.query(`select * from account where userid='${puserid}'`)
+   .then(([rows,field])=>{
+      console.log('deserialize : ' + rows[0].userid);
+      if(puserid == rows[0].userid){
+        console.log('세션 유지');
+        done(null, rows[0].userid)
+      }
+   })
+})   
+//-----------
+
+// h. 로그아웃 구현
+app.post('/logout',(req,res)=>{
+  console.log(req.session.user);
+
+  // res.clearCookie('userid');
+  req.session.destroy(err=>{
+    if(err){
+      console.error(err);
+    }else{
+      console.log('세션 삭제/로그아웃');
+      res.status(200).send();    }
+  })
+})
+
 
 //------------------------------
 connectDB();
