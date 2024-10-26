@@ -31,8 +31,13 @@
         <%= data.content %>
       </p>
 
+  
+      <% const filePath = data.path.replace(/\\/g,'/').replace("/public","") %>
+      <p><%= filePath %></p>
+      <img src= "<%= filePath %>" width="200px">
+
       <p class="card-text">
-        <%= data.date %>
+       작성일 :  <%= data.date %>
       </p>
 
       <a href="/edit/<%= data._id %>" class="btn btn-primary" target='_blank'> 수정하기</a>
