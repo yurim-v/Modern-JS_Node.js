@@ -107,7 +107,12 @@ app.post('/save',(req,res)=>{
   console.log(req.body.date)
 
   mydb.collection('post').insertOne(
-    {title : req.body.title, content : req.body.content, date : req.body.date}
+    {
+      title : req.body.title, 
+      content : req.body.content, 
+      date : req.body.date,
+      path : imgPath
+    }
   ).then((result)=>{
     console.log('몽고 DB 데이터 추가 완료');
     
@@ -322,11 +327,15 @@ app.post('/join',(req,res)=>{
 //---------------------------------------------
 
 // 이미지 파일 첨부 기능 구현
+
+let imgPath = '';
+
 app.post('/photo', upload.single('picture') ,
   (req,res)=>{
   console.log(req.file);
   console.log(req.file.path);
 
+  imgPath = '\\' + req.file.path ;
 })
 
 //---------------------------------------------
