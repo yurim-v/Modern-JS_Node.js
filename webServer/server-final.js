@@ -338,6 +338,19 @@ app.post('/photo', upload.single('picture') ,
   imgPath = '\\' + req.file.path ;
 })
 
+
+//---------------------------------------------
+
+// 검색 기능 구현
+app.get('/search',(req,res)=>{
+  console.log(req.query.value);
+  mydb.collection('post').find({title : req.query.value}).toArray()
+   .then(result=>{
+    console.log(result);
+    res.render('search.ejs',{data : result});
+   })
+})
+
 //---------------------------------------------
 
 async function connectDB(){
