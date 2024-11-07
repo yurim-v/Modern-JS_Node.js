@@ -1,9 +1,14 @@
 
+// 환경 변수
+const dotenv = require('dotenv').config();
+
+//----------------
+
 const mysql = require('mysql2/promise');
 
 const mongoClient =require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectId;
-const url = 'mongodb+srv://yurim-v:yurim-v@yurim-v.6vzoh.mongodb.net/?retryWrites=true&w=majority&appName=yurim-v';
+const url = process.env.DB_URL;
 
 const express = require('express');
 const app = express();
@@ -371,7 +376,7 @@ async function connectDB(){
 
     console.log('sql 연결 완료');
 
-    app.listen(3000 ,()=>{
+    app.listen( process.env.PORT, process.env.USER_IP ,()=>{
       console.log('3000번 포트로 서버 접속 중...');
     })
     
