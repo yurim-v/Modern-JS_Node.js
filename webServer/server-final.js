@@ -32,6 +32,10 @@ app.use(express.static('public'));
 
 const sha = require('sha256');
 
+
+// /list 라우터 분리
+app.use('/', require('./routes/post.js'));
+
 //---------------------------------------------
 
 const session = require('express-session');
@@ -88,7 +92,7 @@ let storage = multer.diskStorage({
   }
 })
 
-let upload = multer({ storage : storage });
+let upload = multer({storage});
 
 //---------------------------------------------
 
@@ -125,20 +129,6 @@ app.post('/save',(req,res)=>{
   })
 })
 
-app.get("/list",(req,res)=>{
-
-  mydb.collection('post').find().toArray()
-    .then((result)=>{
-      console.log('데이터 조회 완료');
-      // console.log(result);
-
-      res.render('list.ejs',{data : result});
-
-    })
-    .catch((err)=>{
-      console.error(err);
-    })
-})
 
 
 app.post('/delete',(req,res)=>{
