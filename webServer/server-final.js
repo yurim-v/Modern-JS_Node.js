@@ -358,7 +358,7 @@ async function connectDB(){
   
 
     connection = await mysql.createConnection({
-      host : 'localhost',
+      host :  process.env.IP,
       user : 'root',
       password : '0000',
       database : 'myboard'
