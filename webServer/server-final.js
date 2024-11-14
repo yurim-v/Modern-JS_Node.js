@@ -366,7 +366,7 @@ async function connectDB(){
 
     console.log('sql 연결 완료');
 
-    app.listen( process.env.PORT,()=>{
+    app.listen( process.env.PORT, process.env.IP,()=>{
       console.log('3000번 포트로 서버 접속 중...');
     })
     
