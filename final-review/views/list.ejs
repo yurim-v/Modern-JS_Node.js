@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>리스트</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <%- include('nav.html') %>
+      
+    <table style="width:90%; text-align:center;">
+      <tr>
+        <th>제목</th>
+        <th>내용</th>
+        <th>날짜</th>
+        <th>파일 유무</th>
+      </tr>
+      <% data.forEach((item)=>{ %>
+        <tr>
+          <td class="content" data-id="<%=item._id%>">
+            <%= item.title %>
+          </td>
+          <td class="content" data-id="<%=item._id%>"> 
+            <%= item.content %>
+          </td>
+          <td class="content" data-id="<%=item._id%>">
+            <%= item.date %>
+          </td>
+          <%  if(item.imagePath){ %>
+            <td class="content" data-id="<%=item._id%>">
+              O
+            </td>
+          <%  }else{ %>
+            <td class="content" data-id="<%=item._id%>">
+              X
+            </td>
+          <%   }  %>
+          <td>
+            <button class="delete" data-id="<%=item._id%>"> 삭제 </button>
+            </td>
+        </tr>
+      <%  }) %>
+    </table>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script>
+      let tr = document.getElementsByClassName('content');
+      console.log(tr)
+      for(let i=0; i<tr.length; i++){
+        tr[i].addEventListener('click',(event=>{
+          console.log(tr[i].dataset.id);
+          location.href='/content/'+tr[i].dataset.id
+        }))
+      }
+    </script>
+    <script>
+      $('.delete').click((e)=>{
+        console.log(e.target.dataset.id);
+        $.ajax({
+          type : 'post',
+          url : '/delete',
+          data : {id:e.target.dataset.id}
+        }).done(result=>{
+          e.target.parentNode.parentNode.remove();
+        })
+      })
+    </script>
+  </body>
+</html>
