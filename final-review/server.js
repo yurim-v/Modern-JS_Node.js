@@ -226,6 +226,16 @@ app.post('/delete',(req,res)=>{
     res.status(200).send();
   })
 })
+
+app.get('/search',(req,res)=>{
+  console.log(req.query);
+  mydb.collection('post').find({title : req.query.value }).toArray()
+    .then(result=>{
+    console.log('검색 완료');
+    res.render('list.ejs',{data : result});
+  })
+})
+
 //-----------------------------------------
 
 async function connectDB(){
